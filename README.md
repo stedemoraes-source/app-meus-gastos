@@ -1,30 +1,47 @@
-💰 App Meus Gastos
+# 💰 Meus Gastos
 
-Aplicativo de gestão financeira pessoal desenvolvido para facilitar o controle, a organização e o planejamento das finanças de maneira simples e intuitiva.
+Aplicativo de gestão financeira pessoal para controlar, organizar e planejar as finanças de forma simples e intuitiva.
 
-🎯 Objetivo do Projeto
+🔗 **Acesse o app:** https://stedemoraes-source.github.io/app-meus-gastos/
 
-O objetivo do App Meus Gastos é oferecer uma ferramenta prática para auxiliar no gerenciamento financeiro pessoal, permitindo que o usuário tenha uma visão mais clara de suas receitas, despesas, economias e situação financeira.
+## 🎯 Objetivo
 
-✨ Funcionalidades
-📌 Cadastro e gerenciamento de contas fixas.
-💳 Registro e controle de despesas variáveis.
-💵 Gerenciamento de receitas e entradas de dinheiro.
-🏦 Controle de dinheiro guardado e economias.
-📊 Acompanhamento da situação financeira.
-🎯 Organização e planejamento do orçamento pessoal.
-🛠️ Tecnologias Utilizadas
-HTML5
-CSS3
-JavaScript
-🤖 Inteligência Artificial no Desenvolvimento
+Oferecer uma ferramenta prática para acompanhar receitas, despesas, vencimentos e dinheiro guardado, dando uma visão clara da situação financeira.
 
-Durante o desenvolvimento do projeto, foi utilizado o Claude (Anthropic) como ferramenta de apoio, auxiliando na construção, organização, implementação e aprimoramento das funcionalidades da aplicação.
+## ✨ Funcionalidades
 
-A inteligência artificial contribuiu para a resolução de problemas, sugestões de melhorias e evolução do projeto ao longo do desenvolvimento.
+- 📊 **Resumo:** sobra do mês, total de gastos, gráfico por categoria e evolução dos últimos 6 meses
+- 📝 **Lançamentos:** cadastro de gastos variáveis e contas fixas que se repetem todo mês
+- 📅 **Vencimentos:** calendário com as contas do mês, próximos vencimentos e exportação para a agenda com lembrete 5 dias antes
+- 🏦 **Guardado/investido:** registro de valores guardados e retiradas, com total acumulado
+- 💡 **Dicas** para economizar com base nos seus próprios gastos
+- 🔐 **Login** com e-mail e senha, com opção de manter conectado
+- 💾 **Backup** dos dados e exportação para planilha
+- 🌙 Tema noturno
 
-Novas funcionalidades e melhorias poderão ser implementadas conforme a evolução da aplicação.
+## ## 📖 Como usar
 
-❤️ Desenvolvedora
+1. Abra o link do app e, no primeiro acesso, informe seu e-mail e crie uma senha.
+2. Na aba **Resumo**, informe a renda do mês para ver quanto sobra.
+3. Na aba **Lançamento**, cadastre seus gastos. Se for uma conta fixa, marque "Repete todo mês" e informe o dia do vencimento.
+4. Na mesma aba, registre o dinheiro guardado/investido.
+5. Na aba **Vencimento**, veja o calendário e baixe o arquivo para a sua agenda.
+6. Use **Backup e planilha**, no rodapé, para guardar uma cópia dos seus dados.
 
-Projeto desenvolvido por Stéphanie de Moraes, com apoio de ferramentas de inteligência artificial durante o processo de desenvolvimento.
+## 🔒 Privacidade
+
+Os dados e o login ficam salvos apenas no navegador do próprio usuário. Nada é enviado para servidores.
+
+## 🛠️ Tecnologias
+
+HTML5, CSS3 e JavaScript.
+
+## 🤖 Inteligência Artificial no desenvolvimento
+
+O Claude (Anthropic) foi utilizado como ferramenta de apoio na construção, organização e melhoria da aplicação, auxiliando na resolução de problemas e na evolução do projeto.
+
+Novas funcionalidades poderão ser adicionadas conforme o aplicativo evoluir.
+
+## ❤️ Desenvolvedora
+
+Projeto desenvolvido por **Stéphanie de Moraes**, com apoio de ferramentas de inteligência artificial.
