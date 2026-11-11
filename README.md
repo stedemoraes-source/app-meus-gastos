@@ -3,6 +3,8 @@
 Aplicativo de gestão financeira pessoal para controlar, organizar e planejar as finanças de forma simples e intuitiva.
 
 🔗 **Acesse o app:** https://stedemoraes-source.github.io/app-meus-gastos/
+<img width="4032" height="352" alt="image" src="https://github.com/user-attachments/assets/93a40cf2-51e1-4f31-95c0-3abcacc9ba01" />
+
 
 ## 🎯 Objetivo
 
