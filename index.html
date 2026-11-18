@@ -90,6 +90,7 @@ h1.brand img{width:44px;height:44px;border-radius:50%;flex:none}
 #auth form{display:grid;gap:10px}
 .lnk{background:none;border:0;color:var(--ac);padding:0;text-decoration:underline;font-size:13px}
 .err{color:var(--bad);font-size:13px;min-height:18px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.chips button{border-radius:99px}.chips button[aria-pressed="true"]{background:var(--ac2);border-color:var(--ac);font-weight:700}
 @media (max-width:720px){.hero,.grid{grid-template-columns:1fr}.big{font-size:32px}}
 </style>
 </head>
@@ -136,6 +137,8 @@ h1.brand img{width:44px;height:44px;border-radius:50%;flex:none}
       <div class="mut" id="paid-n" style="margin-top:6px"></div>
     </div>
   </section>
+
+  <section class="card full" id="cardsum" hidden><h2>Faturas por cartão</h2><div id="cardsum-l"></div></section>
 
   <section class="grid">
     <div class="card">
@@ -199,12 +202,20 @@ h1.brand img{width:44px;height:44px;border-radius:50%;flex:none}
   </section>
   <section class="card full">
     <h2>Gastos do mês</h2>
+    <div class="btns" style="margin:-4px 0 8px;align-items:center"><button type="button" class="xl">Baixar o mês em Excel (.xlsx)</button><span class="mut" id="xmsg" role="status"></span></div>
     <div class="mut" id="list-sum" style="margin:-6px 0 8px"></div>
     <div id="list"></div>
   </section>
   </div>
 
   <div class="pane" id="p-cartao" hidden>
+  <section class="card full"><h2>Meus cartões</h2><div class="chips" id="chips"></div>
+    <form id="ncf" class="fields" hidden>
+      <div class="w2"><label for="ncn">Apelido do cartão</label><input id="ncn" maxlength="30" required placeholder="Ex.: Cartão Nu"></div>
+      <div><label for="ncc">Dia de fechamento (opcional)</label><input id="ncc" type="number" min="0" max="31" inputmode="numeric" placeholder="Ex.: 3"></div>
+      <div><label for="ncd">Dia de vencimento (opcional)</label><input id="ncd" type="number" min="0" max="31" inputmode="numeric" placeholder="Ex.: 10"></div>
+      <div class="w2" style="display:flex;gap:8px"><button class="pri" type="submit" style="flex:1">Salvar cartão</button><button type="button" id="ncx" style="flex:1">Cancelar</button></div>
+    </form></section>
   <section class="card full" id="rv" hidden>
     <h2>Confira a fatura lida</h2>
     <p class="mut" style="margin:0 0 10px">Corrija o que precisar (descrição, valor, parcela) e depois salve. Linhas sem valor são ignoradas.</p>
@@ -214,8 +225,8 @@ h1.brand img{width:44px;height:44px;border-radius:50%;flex:none}
     <div class="btns"><button type="button" id="rv-add">Adicionar linha</button><button class="pri" type="button" id="rv-save">Salvar na fatura</button><button type="button" id="rv-cancel">Cancelar</button></div>
   </section>
   <section class="grid">
-    <div class="card"><div class="calhead"><h2 style="margin:0">Fatura do cartão</h2><span class="mut" id="cc-m"></span></div><div class="big" id="cc-t" style="font-size:30px;margin-bottom:8px">R$ 0,00</div><div id="cc-l"></div><div class="mut" style="margin-top:8px">O total entra sozinho nos gastos do mês como "Cartão de crédito". Excluir uma compra parcelada remove também as parcelas futuras.</div></div>
-    <div class="card"><h2>Nova compra no cartão</h2>
+    <div class="card"><div class="calhead"><h2 style="margin:0" id="cc-title">Fatura do cartão</h2><span class="mut" id="cc-m"></span></div><div class="big" id="cc-t" style="font-size:30px;margin-bottom:8px">R$ 0,00</div><div id="cc-l"></div><div class="mut" style="margin-top:8px">O total entra sozinho nos gastos do mês com o apelido do cartão (categoria "Cartão de crédito"). Excluir uma compra parcelada remove também as parcelas futuras.</div></div>
+    <div class="card"><h2 id="cf-title">Nova compra no cartão</h2>
       <form id="cf" class="fields">
         <div class="w2"><label for="cx">Descrição</label><input id="cx" required placeholder="Ex.: Geladeira, Mercado"></div>
         <div><label for="cv">Valor total (R$)</label><input id="cv" required inputmode="decimal" placeholder="1200,00"></div>
@@ -233,8 +244,10 @@ h1.brand img{width:44px;height:44px;border-radius:50%;flex:none}
       <div class="btns"><button class="pri" type="button" id="ci-go">Ler fatura</button></div>
       <div class="mut" id="ci-m" role="status"></div></div>
     <div class="card"><h2>Seu cartão</h2>
-      <div class="fields"><div><label for="cc-close">Dia de fechamento</label><input id="cc-close" type="number" min="0" max="31" inputmode="numeric" placeholder="Ex.: 3"></div><div><label for="cc-due">Dia de vencimento</label><input id="cc-due" type="number" min="0" max="31" inputmode="numeric" placeholder="Ex.: 10"></div></div>
-      <div class="mut" style="margin-top:8px">Com o fechamento, cada compra vai para a fatura certa. O vencimento aparece na aba Vencimento.</div></div>
+      <div class="fields"><div class="w2"><label for="cc-name">Apelido do cartão</label><input id="cc-name" maxlength="30"></div><div><label for="cc-close">Dia de fechamento</label><input id="cc-close" type="number" min="0" max="31" inputmode="numeric" placeholder="Ex.: 3"></div><div><label for="cc-due">Dia de vencimento</label><input id="cc-due" type="number" min="0" max="31" inputmode="numeric" placeholder="Ex.: 10"></div></div>
+      <div class="mut" style="margin-top:8px">Com o fechamento, cada compra vai para a fatura certa. O vencimento aparece na aba Vencimento.</div>
+      <div style="margin-top:10px"><button type="button" id="cc-del">Excluir este cartão</button></div>
+      <div id="cc-delw" hidden style="margin-top:8px"><div class="tip b" role="alert" id="cc-delt"></div><div class="btns" style="margin:0"><button type="button" id="cc-yes">Excluir cartão</button><button type="button" id="cc-no">Cancelar</button></div></div></div>
   </section>
   </div>
 
@@ -254,7 +267,7 @@ h1.brand img{width:44px;height:44px;border-radius:50%;flex:none}
 
   <details class="card" id="bk">
     <summary>Backup e planilha</summary>
-    <div class="btns"><button id="exp">Baixar backup</button><button id="csv">Baixar planilha (.csv)</button><button id="impb">Importar arquivo</button><input type="file" id="imp" accept=".json,application/json" hidden></div>
+    <div class="btns"><button id="exp">Baixar backup</button><button class="xl" type="button">Baixar mês em Excel (.xlsx)</button><button id="csv">Baixar planilha (.csv)</button><button id="impb">Importar arquivo</button><input type="file" id="imp" accept=".json,application/json" hidden></div>
     <label for="box">Ou copie e cole os dados aqui</label>
     <textarea id="box" rows="3"></textarea>
     <button id="load">Importar texto colado</button>
@@ -275,10 +288,12 @@ const d0=new Date();let cur=d0.getFullYear()+'-'+String(d0.getMonth()+1).padStar
 const addM=(m,n)=>{let [y,x]=m.split('-').map(Number);const t=y*12+x-1+n;return Math.floor(t/12)+'-'+String(t%12+1).padStart(2,'0')};
 const lbl=m=>{const [y,x]=m.split('-');return['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'][x-1]};
 const income=m=>{const ks=Object.keys(S.income).filter(k=>k<=m).sort();return ks.length?S.income[ks.pop()]:0};
-const cc=()=>(S.cc=S.cc||{close:0,due:0}),uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+function ensureCards(){if(!Array.isArray(S.cards)||!S.cards.length){const o=S.cc||{};S.cards=[{id:'c0',name:'Cartão',close:o.close||0,due:o.due||0}];if(S.paid)for(const k of Object.keys(S.paid))if(k.startsWith('fatura:')){S.paid['fatura-c0:'+k.slice(7)]=S.paid[k];delete S.paid[k]}}
+  if(!S.cards.some(c=>c.id===S.curCard))S.curCard=S.cards[0].id}
+const cc=()=>{ensureCards();return S.cards.find(c=>c.id===S.curCard)},cardOf=p=>{ensureCards();return S.cards.some(c=>c.id===p.card)?p.card:S.cards[0].id},uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
 const inst=(p,m)=>{const [a,b]=p.start.split('-').map(Number),[c,d]=m.split('-').map(Number),k=c*12+d-(a*12+b);if(k<0||k>p.n-p.first)return null;const no=p.first+k,B=Math.round(p.total/p.n*100)/100;return{no,a:no===p.n&&p.n>1?Math.round((p.total-B*(p.n-1))*100)/100:B}};
 const amt=(p,m)=>{const x=inst(p,m);return x?x.a:0};
-const itemsFor=m=>{const a=S.items.filter(i=>i.month===m||(i.rec&&i.month<=m)),v=(S.cp||[]).reduce((t,p)=>t+amt(p,m),0);return Math.abs(v)>.004?a.concat([{id:'fatura',desc:'Fatura do cartão',val:v,cat:'Cartão de crédito',month:m,rec:0,due:cc().due||0,auto:1}]):a};
+const itemsFor=m=>{ensureCards();let a=S.items.filter(i=>i.month===m||(i.rec&&i.month<=m));for(const c of S.cards){const v=(S.cp||[]).filter(p=>cardOf(p)===c.id).reduce((t,p)=>t+amt(p,m),0);if(Math.abs(v)>.004)a=a.concat([{id:'fatura-'+c.id,desc:c.name,val:v,cat:'Cartão de crédito',month:m,rec:0,due:c.due||0,auto:1,card:c.id}])}return a};
 function sums(m){const by={};let tot=0,e=0,w=0,cc=0,fx=0;for(const i of itemsFor(m)){by[i.cat]=(by[i.cat]||0)+i.val;tot+=i.val;if(i.rec)fx+=i.val;const g=CATS[i.cat][1];if(g==='e')e+=i.val;else if(g==='c')cc+=i.val;else w+=i.val}return{by,tot,e,w,cc,fx}}
 const num=s=>{s=String(s).trim();if(!s)return 0;if(s.includes(','))s=s.replace(/\./g,'').replace(',','.');const v=parseFloat(s);return isFinite(v)?v:0};
 
@@ -358,7 +373,7 @@ function render(){
   $('#sv-tot').textContent=brl(svT);$('#sv-tot').className='big'+(svT<0?' neg':'');
   $('#sv-mon').textContent='Guardado/investido em '+lbl(cur)+' '+cur.slice(0,4)+': '+brl(svM)+(sv.length?' · '+sv.length+(sv.length>1?' lançamentos':' lançamento'):'');
   $('#svl').innerHTML=sv.length?sv.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id)).slice(0,8).map(x=>'<div class="row"><div class="d">'+esc(x.note||(x.val<0?'Retirada':'Guardado/investido'))+'<div class="tag">'+x.date.slice(8,10)+'/'+x.date.slice(5,7)+'/'+x.date.slice(0,4)+'</div></div><b'+(x.val<0?' class="neg"':'')+'>'+(x.val<0?'− '+brl(-x.val):'+ '+brl(x.val))+'</b><button data-sid="'+x.id+'">Excluir</button></div>').join(''):'<div class="empty">Nada guardado ainda. Use a aba Lançamento para guardar/investir.</div>';
-  renderCard();
+  renderCard();renderCardSum();
   $('#tips').innerHTML=tips().map(t=>'<div class="tip '+t[0]+'">'+esc(t[1])+'</div>').join('');
 
   const its=itemsFor(cur).sort((a,b)=>b.val-a.val);
@@ -382,6 +397,22 @@ function imp(txt){try{const d=JSON.parse(txt);if(!Array.isArray(d.items)||!d.inc
 $('#bk').ontoggle=()=>{$('#box').value=JSON.stringify(S)};
 $('#exp').onclick=()=>{dl('meus-gastos-backup.json',JSON.stringify(S),'application/json');msg('Backup gerado. Se o arquivo não baixar, copie o texto da caixa acima.')};
 $('#csv').onclick=()=>{const rows=[['Mês','Descrição','Categoria','Valor','Todo mês']].concat(S.items.map(i=>[i.month,'"'+i.desc.replace(/"/g,'""')+'"',i.cat,String(i.val).replace('.',','),i.rec?'sim':'não']));dl('meus-gastos.csv','\ufeff'+rows.map(r=>r.join(';')).join('\n'),'text/csv')};
+// planilha Excel (.xlsx) do mês
+const loadXlsx=()=>window.XLSX?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)});
+const r2=v=>Math.round(v*100)/100;
+function sheet(rows,w,money){const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=w.map(x=>({wch:x}));const g=XLSX.utils.decode_range(ws['!ref']);for(let R=1;R<=g.e.r;R++)for(const C of money){const c=ws[XLSX.utils.encode_cell({r:R,c:C})];if(c&&c.t==='n')c.z='"R$" #,##0.00'}return ws}
+async function xl(){const say=t=>{$('#xmsg').textContent=t;$('#msg').textContent=t};say('Gerando a planilha...');
+  try{await loadXlsx()}catch(x){return say('Não consegui carregar o gerador de Excel (precisa de internet). Use "Baixar planilha (.csv)", que também abre no Excel.')}
+  try{const m=sums(cur),inc=income(cur),pd=paidSum(cur),sv=svMonth(cur),its=itemsFor(cur).sort((a,b)=>b.val-a.val);
+    const res=[['Item','Valor'],['Mês',cur.slice(5)+'/'+cur.slice(0,4)],['Renda do mês',r2(inc)],['Total de gastos',r2(m.tot)],['Já pago',r2(pd)],['Falta pagar',r2(Math.max(0,m.tot-pd))],['Guardado/investido no mês',r2(sv)],['Sobra do mês',r2(inc-m.tot-sv)],['',''],['Gastos por categoria','']].concat(Object.entries(m.by).sort((a,b)=>b[1]-a[1]).map(([c,v])=>[c,r2(v)]));
+    const gas=[['Descrição','Categoria','Valor','Vence no dia','Todo mês','Pago']].concat(its.map(i=>[i.desc,i.cat,r2(i.val),i.due?dueDay(i,cur):'',i.rec?'Sim':'Não',isPaid(i,cur)?'Sim':'Não']));
+    const cr=[['Cartão','Descrição','Parcela','Data da compra','Valor no mês']];
+    for(const c of S.cards)for(const p of (S.cp||[]).filter(p=>cardOf(p)===c.id)){const x=inst(p,cur);if(x)cr.push([c.name,p.desc,p.n>1?x.no+'/'+p.n:'À vista',p.date?p.date.slice(8,10)+'/'+p.date.slice(5,7)+'/'+p.date.slice(0,4):'',r2(x.a)])}
+    const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,sheet(res,[30,16],[1]),'Resumo');XLSX.utils.book_append_sheet(wb,sheet(gas,[34,20,14,13,10,8],[2]),'Gastos');
+    if(cr.length>1)XLSX.utils.book_append_sheet(wb,sheet(cr,[22,34,10,15,14],[4]),'Cartões');
+    const fn='meus-gastos-'+cur+'.xlsx';XLSX.writeFile(wb,fn);say('Planilha de '+lbl(cur)+' '+cur.slice(0,4)+' gerada ('+fn+').')}
+  catch(x){say('Não foi possível gerar a planilha. Tente o .csv.')}}
+document.querySelectorAll('.xl').forEach(b=>b.onclick=xl);
 $('#impb').onclick=()=>$('#imp').click();
 $('#imp').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>imp(r.result);r.readAsText(f);e.target.value=''};
 $('#load').onclick=()=>imp($('#box').value);
@@ -401,16 +432,31 @@ const today=()=>{const t=new Date();return t.getFullYear()+'-'+pad(t.getMonth()+
 const invM=ds=>{const [y,mo,d]=ds.split('-').map(Number),{close:c,due:u}=cc();let m=y+'-'+pad(mo);if(c&&d>c)m=addM(m,1);if(c&&u&&u<=c)m=addM(m,1);return m};
 const ims=t=>{$('#ci-m').textContent=t};
 function syncInv(){const ds=$('#cd').value||today();$('#cm').value=invM(ds);$('#cinfo').textContent=cc().close?'Fechamento dia '+cc().close+': compras depois desse dia vão para a fatura seguinte.':'Informe o dia de fechamento em "Seu cartão" para escolher a fatura automaticamente.'}
-function renderCard(){const m=cur,ps=(S.cp||[]).filter(p=>inst(p,m)),t=ps.reduce((a,p)=>a+amt(p,m),0);
-  $('#cc-m').textContent=lbl(m)+' '+m.slice(0,4);$('#cc-t').textContent=brl(t);
+function renderCard(){const m=cur,ps=(S.cp||[]).filter(p=>cardOf(p)===cc().id&&inst(p,m)),t=ps.reduce((a,p)=>a+amt(p,m),0);
+  drawCards();$('#cc-m').textContent=lbl(m)+' '+m.slice(0,4);$('#cc-t').textContent=brl(t);
   $('#cc-l').innerHTML=ps.length?ps.map(p=>{const x=inst(p,m);return '<div class="row"><div class="d">'+esc(p.desc)+'<div class="tag">'+(p.n>1?'parcela '+x.no+'/'+p.n:'à vista')+(p.date?' · '+p.date.slice(8,10)+'/'+p.date.slice(5,7):'')+'</div></div><b>'+brl(x.a)+'</b><button data-pid="'+p.id+'">Excluir</button></div>'}).join(''):'<div class="empty">Nenhuma compra na fatura deste mês.</div>';
   if(document.activeElement!==$('#cc-close'))$('#cc-close').value=cc().close||'';if(document.activeElement!==$('#cc-due'))$('#cc-due').value=cc().due||'';
   if(!$('#cd').value)$('#cd').value=today();if(document.activeElement!==$('#cm'))syncInv()}
+function drawCards(){const c=cc();
+  $('#chips').innerHTML=S.cards.map(x=>'<button type="button" data-cid="'+x.id+'" aria-pressed="'+(x.id===c.id)+'">'+esc(x.name)+'</button>').join('')+'<button type="button" class="pri" id="ncb">+ Novo cartão</button>';
+  $('#cc-title').textContent='Fatura · '+c.name;$('#cf-title').textContent='Nova compra · '+c.name;
+  if(document.activeElement!==$('#cc-name'))$('#cc-name').value=c.name;
+  $('#cc-del').disabled=S.cards.length<2}
+function renderCardSum(){ensureCards();const rows=S.cards.map(c=>({c,v:(S.cp||[]).filter(p=>cardOf(p)===c.id).reduce((t,p)=>t+amt(p,cur),0)})),tot=rows.reduce((a,r)=>a+r.v,0);
+  $('#cardsum').hidden=!(S.cards.length>1||Math.abs(tot)>.004);
+  $('#cardsum-l').innerHTML=rows.map(({c,v})=>'<div class="row"><span class="dot" style="background:'+CATS['Cartão de crédito'][0]+'"></span><div class="d">'+esc(c.name)+'<div class="tag">'+(c.due?'vence dia '+dueDay({due:c.due},cur):'sem vencimento informado')+'</div></div><b>'+brl(v)+'</b></div>').join('')+(rows.length>1?'<div class="row"><div class="d"><b>Total nos cartões</b></div><b>'+brl(tot)+'</b></div>':'')}
+$('#chips').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='ncb'){$('#ncf').hidden=false;$('#ncn').focus();return}S.curCard=b.dataset.cid;$('#cc-delw').hidden=true;save();render()};
+$('#ncf').onsubmit=e=>{e.preventDefault();const n=$('#ncn').value.trim().slice(0,30);if(!n)return;ensureCards();const c={id:uid(),name:n,close:Math.min(31,Math.max(0,parseInt($('#ncc').value)||0)),due:Math.min(31,Math.max(0,parseInt($('#ncd').value)||0))};S.cards.push(c);S.curCard=c.id;save();$('#ncf').reset();$('#ncf').hidden=true;render()};
+$('#ncx').onclick=()=>{$('#ncf').reset();$('#ncf').hidden=true};
+$('#cc-name').oninput=e=>{cc().name=e.target.value.trim().slice(0,30)||'Cartão';save();render()};
+$('#cc-del').onclick=()=>{const c=cc(),n=(S.cp||[]).filter(p=>cardOf(p)===c.id).length;$('#cc-delt').textContent='Excluir "'+c.name+'"? '+(n?n+' compra(s) deste cartão também serão removidas.':'Este cartão não tem compras.');$('#cc-delw').hidden=false};
+$('#cc-no').onclick=()=>{$('#cc-delw').hidden=true};
+$('#cc-yes').onclick=()=>{if(S.cards.length<2)return;const c=cc();S.cp=(S.cp||[]).filter(p=>cardOf(p)!==c.id);if(S.paid)Object.keys(S.paid).forEach(k=>{if(k.startsWith('fatura-'+c.id+':'))delete S.paid[k]});S.cards=S.cards.filter(x=>x.id!==c.id);S.curCard=S.cards[0].id;$('#cc-delw').hidden=true;save();render()};
 $('#cd').onchange=syncInv;
 $('#cc-close').oninput=e=>{cc().close=Math.min(31,Math.max(0,parseInt(e.target.value)||0));save();syncInv()};
 $('#cc-due').oninput=e=>{cc().due=Math.min(31,Math.max(0,parseInt(e.target.value)||0));save();syncInv();render()};
 $('#cf').onsubmit=e=>{e.preventDefault();const t=num($('#cv').value),n=Math.max(1,Math.min(72,parseInt($('#cn').value)||1));if(!t)return;const ds=$('#cd').value||today(),st=$('#cm').value||invM(ds);
-  (S.cp=S.cp||[]).push({id:uid(),desc:$('#cx').value.trim()||'Compra no cartão',total:t,n,first:1,start:st,date:ds});save();$('#cx').value='';$('#cv').value='';$('#cn').value='1';cur=st;render();$('#cx').focus()};
+  (S.cp=S.cp||[]).push({id:uid(),desc:$('#cx').value.trim()||'Compra no cartão',total:t,n,first:1,start:st,date:ds,card:cc().id});save();$('#cx').value='';$('#cv').value='';$('#cn').value='1';cur=st;render();$('#cx').focus()};
 $('#cc-l').onclick=e=>{const id=e.target.dataset&&e.target.dataset.pid;if(id){S.cp=S.cp.filter(p=>p.id!==id);save();render()}};
 let IM=null;
 function rvDraw(){$('#rv').hidden=!IM;if(!IM)return;$('#rv-m').value=IM.month;$('#rv-t').value=IM.total?brl(IM.total):'não encontrado';
@@ -423,8 +469,8 @@ $('#rv-m').onchange=e=>{IM.month=e.target.value};
 $('#rv-cancel').onclick=()=>{IM=null;rvDraw();ims('')};
 $('#rv-save').onclick=()=>{const mo=$('#rv-m').value;if(!mo)return ims('Informe o mês da fatura.');let add=0,skip=0;
   for(const r of IM.rows){const v=num(r.val),d=(r.desc||'').trim();if(!v||!d)continue;const n=Math.max(1,parseInt(r.n)||1),c=Math.min(n,Math.max(1,parseInt(r.cur)||1));
-    if((S.cp||[]).some(p=>p.desc.trim().toLowerCase()===d.toLowerCase()&&Math.abs(amt(p,mo)-v)<.011)){skip++;continue}
-    (S.cp=S.cp||[]).push({id:uid(),desc:d,total:Math.round(v*n*100)/100,n,first:c,start:mo,date:r.d||''});add++}
+    if((S.cp||[]).some(p=>cardOf(p)===cc().id&&p.desc.trim().toLowerCase()===d.toLowerCase()&&Math.abs(amt(p,mo)-v)<.011)){skip++;continue}
+    (S.cp=S.cp||[]).push({id:uid(),desc:d,total:Math.round(v*n*100)/100,n,first:c,start:mo,date:r.d||'',card:cc().id});add++}
   save();IM=null;cur=mo;render();rvDraw();ims(add+' lançamento(s) salvo(s) na fatura de '+lbl(mo)+'. As parcelas restantes já foram lançadas nas próximas faturas.'+(skip?' '+skip+' já existia(m) e não foi(ram) duplicado(s).':''))};
 const loadPdf=()=>window.pdfjsLib?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script'),B='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';s.src=B+'pdf.min.js';s.onload=()=>{pdfjsLib.GlobalWorkerOptions.workerSrc=B+'pdf.worker.min.js';ok()};s.onerror=no;document.head.appendChild(s)});
 async function toImgs(files,max){const jp=c=>new Promise(r=>c.toBlob(r,'image/jpeg',.85)),o=[];
